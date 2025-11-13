@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://neriom.mx"),
 
-  title: "Neriom – Automatización Inteligente para Empresas",
+  title: "Neriom™ – Automatización Inteligente para Empresas",
   description:
     "Soluciones de automatización, chatbots, procesamiento XML e integraciones empresariales. Tecnología real para empresas reales.",
   keywords: [
