@@ -4,19 +4,26 @@ import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 /* ------------------------------------------
-   LIGHT PARTICLE BACKGROUND (NO DEPENDENCIES)
+   PARTICLES – FIX 100% SEGURO PARA TYPESCRIPT
 ------------------------------------------- */
 function Particles() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const c = canvas.getContext("2d");
+    if (!canvas) return;
 
-    let w, h, particles;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = 0,
+      h = 0,
+      particles: any[] = [];
     const particleCount = 45;
 
-    function init() {
+    const init = () => {
+      if (!canvas) return;
+
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
 
@@ -30,29 +37,32 @@ function Particles() {
           dy: (Math.random() - 0.5) * 0.3,
         });
       }
-    }
+    };
 
-    function animate() {
-      c.clearRect(0, 0, w, h);
+    const animate = () => {
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, w, h);
 
       particles.forEach((p) => {
         p.x += p.dx;
         p.y += p.dy;
 
-        if (p.x < 0 || p.x > h) p.dx *= -1;
+        if (p.x < 0 || p.x > w) p.dx *= -1;
         if (p.y < 0 || p.y > h) p.dy *= -1;
 
-        c.beginPath();
-        c.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        c.fillStyle = "rgba(255,255,255,0.25)";
-        c.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        ctx.fill();
       });
 
       requestAnimationFrame(animate);
-    }
+    };
 
     init();
     animate();
+
     window.addEventListener("resize", init);
     return () => window.removeEventListener("resize", init);
   }, []);
@@ -63,11 +73,13 @@ function Particles() {
 /* ------------------------------------------
    3D TILT COMPONENT
 ------------------------------------------- */
-function TiltCard({ children }) {
-  const ref = useRef(null);
+function TiltCard({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement | null>(null);
 
-  function handleMove(e) {
+  function handleMove(e: React.MouseEvent) {
     const el = ref.current;
+    if (!el) return;
+
     const rect = el.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
@@ -79,6 +91,7 @@ function TiltCard({ children }) {
   }
 
   function reset() {
+    if (!ref.current) return;
     ref.current.style.transform = "rotateX(0) rotateY(0) scale(1)";
   }
 
@@ -132,11 +145,7 @@ export default function Home() {
 
           <div className="hidden sm:flex space-x-8 text-gray-300 font-medium text-sm">
             {["inicio", "soluciones", "productos", "contacto"].map((sec) => (
-              <a
-                key={sec}
-                href={`#${sec}`}
-                className="hover:text-white transition-colors"
-              >
+              <a key={sec} href={`#${sec}`} className="hover:text-white transition-colors">
                 {sec.charAt(0).toUpperCase() + sec.slice(1)}
               </a>
             ))}
@@ -206,11 +215,7 @@ export default function Home() {
 
       {/* SOLUCIONES */}
       <section id="soluciones" className="py-32 px-6 max-w-6xl mx-auto text-center">
-        <motion.h2
-          className="text-4xl font-bold mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
+        <motion.h2 className="text-4xl font-bold mb-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
           Soluciones
         </motion.h2>
 
@@ -227,8 +232,8 @@ export default function Home() {
             <TiltCard key={i}>
               <motion.div
                 className="p-10 bg-white text-gray-900 rounded-2xl shadow-xl border border-gray-200"
-                initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.7, delay: i * 0.1 }}
               >
                 <h3 className="text-2xl font-semibold mb-5">{card.title}</h3>
@@ -242,11 +247,7 @@ export default function Home() {
       {/* PRODUCTOS */}
       <section id="productos" className="py-32 px-6 bg-white/10 backdrop-blur-xl border-y border-white/10">
         <div className="max-w-6xl mx-auto text-center">
-          <motion.h2
-            className="text-4xl font-bold mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-          >
+          <motion.h2 className="text-4xl font-bold mb-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
             Productos
           </motion.h2>
 
@@ -259,19 +260,13 @@ export default function Home() {
             <TiltCard>
               <motion.div
                 className="p-10 bg-white text-gray-900 rounded-2xl shadow-xl border border-gray-200"
-                initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               >
                 <h3 className="text-2xl font-semibold mb-5">Neriom XML</h3>
-                <p className="text-gray-600 text-base mb-8">
-                  Automatización total del flujo XML.
-                </p>
+                <p className="text-gray-600 text-base mb-8">Automatización total del flujo XML.</p>
 
-                <a
-                  href="https://neriom-xml.vercel.app"
-                  target="_blank"
-                  className="text-blue-600 font-medium hover:text-blue-800"
-                >
+                <a href="https://neriom-xml.vercel.app" target="_blank" className="text-blue-600 font-medium hover:text-blue-800">
                   Abrir producto →
                 </a>
               </motion.div>
@@ -281,14 +276,12 @@ export default function Home() {
             <TiltCard>
               <motion.div
                 className="p-10 bg-white text-gray-900 rounded-2xl shadow-xl border border-gray-200"
-                initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ delay: 0.1 }}
               >
                 <h3 className="text-2xl font-semibold mb-5">Neriom Chatbots</h3>
-                <p className="text-gray-600 text-base mb-8">
-                  Chatbots conectados a flujos empresariales reales.
-                </p>
+                <p className="text-gray-600 text-base mb-8">Chatbots conectados a flujos empresariales reales.</p>
 
                 <a href="#contacto" className="text-blue-600 font-medium hover:text-blue-800">
                   Solicitar demo →
@@ -301,23 +294,15 @@ export default function Home() {
 
       {/* CONTACTO */}
       <section id="contacto" className="py-32 px-6 text-center">
-        <motion.h2
-          className="text-4xl font-bold mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-        >
+        <motion.h2 className="text-4xl font-bold mb-6" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}>
           Contacto
         </motion.h2>
 
         <p className="text-gray-300 max-w-xl mx-auto mb-10">
-          ¿Quieres implementar automatización en tu empresa?
-          Escríbenos y te ayudamos.
+          ¿Quieres implementar automatización en tu empresa? Escríbenos y te ayudamos.
         </p>
 
-        <a
-          href="mailto:contacto@neriom.mx"
-          className="px-10 py-4 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold shadow-lg transition-all"
-        >
+        <a href="mailto:contacto@neriom.mx" className="px-10 py-4 bg-blue-600 hover:bg-blue-700 rounded-xl font-semibold shadow-lg transition-all">
           contacto@neriom.mx
         </a>
       </section>
@@ -333,13 +318,11 @@ export default function Home() {
       {/* FOOTER CORPORATIVO */}
       <footer className="relative z-10 py-12 border-t border-white/10 bg-[#0A1831]/40 backdrop-blur-xl mt-20">
         <div className="max-w-6xl mx-auto px-6 text-center md:text-left grid md:grid-cols-3 gap-10 text-gray-300">
-
+          
           {/* Columna 1 */}
           <div>
             <h3 className="font-semibold text-white mb-3">Neriom</h3>
-            <p className="text-sm text-gray-400">
-              Automatización real para empresas reales.
-            </p>
+            <p className="text-sm text-gray-400">Automatización real para empresas reales.</p>
           </div>
 
           {/* Columna 2 */}
