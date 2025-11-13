@@ -2,23 +2,24 @@
 
 import { useEffect, useRef } from "react";
 
-/* ------------------------------------------
-   PARTICULAS – corregidas para evitar errores
-------------------------------------------- */
 function Particles() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return; // 👈 evita error en build
+    if (!canvas) return; // ✔️ Garantiza que canvas no sea null
 
-    const c = canvas.getContext("2d");
-    if (!c) return; // 👈 evita error adicional
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return; // ✔️ Garantiza contexto válido
 
-    let w: number, h: number, particles: any[];
+    let w = 0,
+      h = 0,
+      particles: any[] = [];
     const particleCount = 45;
 
-    function init() {
+    const init = () => {
+      if (!canvas) return; // ✔️ null check extra para TypeScript
+
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
 
@@ -32,10 +33,12 @@ function Particles() {
           dy: (Math.random() - 0.5) * 0.3,
         });
       }
-    }
+    };
 
-    function animate() {
-      c.clearRect(0, 0, w, h);
+    const animate = () => {
+      if (!ctx) return; // ✔️ null check para animación
+
+      ctx.clearRect(0, 0, w, h);
 
       particles.forEach((p) => {
         p.x += p.dx;
@@ -44,14 +47,14 @@ function Particles() {
         if (p.x < 0 || p.x > w) p.dx *= -1;
         if (p.y < 0 || p.y > h) p.dy *= -1;
 
-        c.beginPath();
-        c.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        c.fillStyle = "rgba(255,255,255,0.25)";
-        c.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        ctx.fill();
       });
 
       requestAnimationFrame(animate);
-    }
+    };
 
     init();
     animate();
@@ -70,66 +73,60 @@ export default function AvisoLegalPage() {
       <Particles />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(59,130,246,0.22),transparent_70%)]" />
 
-      {/* BOTÓN FLOTANTE REGRESAR */}
+      {/* BOTÓN REGRESAR */}
       <button
         onClick={() => (window.location.href = "/")}
         className="fixed top-6 left-6 z-50 w-12 h-12 rounded-full bg-white/20 
-                   backdrop-blur-xl border border-white/30 shadow-xl 
-                   text-white text-xl flex items-center justify-center
-                   hover:bg-white/30 hover:scale-110 transition"
+        backdrop-blur-xl border border-white/30 shadow-xl 
+        text-white text-xl flex items-center justify-center
+        hover:bg-white/30 hover:scale-110 transition"
       >
         ←
       </button>
 
-      {/* CARD DE CONTENIDO */}
+      {/* CONTENIDO */}
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-32">
         <div className="bg-white text-gray-900 p-10 md:p-14 rounded-2xl shadow-2xl border border-gray-200 backdrop-blur-xl">
 
           <h1 className="text-4xl font-bold mb-6">Aviso Legal</h1>
 
           <p className="text-gray-700 mb-6">
-            Este Aviso Legal regula el acceso y uso del sitio web y servicios proporcionados por 
-            <strong> Neriom</strong>. Al navegar o utilizar nuestros productos, aceptas las condiciones
-            aquí descritas.
+            Este Aviso Legal regula el acceso y uso del sitio web y servicios
+            proporcionados por <strong>Neriom</strong>.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">1. Titularidad del sitio web</h2>
           <p className="text-gray-700 mb-6">
-            El sitio web, herramientas y plataformas relacionados con Neriom son titularidad de la empresa
-            desarrolladora responsable del software y automatizaciones comercializadas bajo esta marca.
+            El sitio web y plataformas relacionadas con Neriom son propiedad de la empresa desarrolladora.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">2. Uso permitido</h2>
           <p className="text-gray-700 mb-6">
-            El usuario se compromete a utilizar el sitio web y los servicios únicamente para fines legítimos,
-            sin violar derechos de terceros ni realizar usos indebidos de las herramientas.
+            El usuario se compromete a utilizar el sitio con fines legítimos.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">3. Exclusión de responsabilidad</h2>
           <p className="text-gray-700 mb-6">
-            Las automatizaciones y herramientas ofrecidas por Neriom funcionan en base a datos y archivos 
-            proporcionados por el usuario. Por lo tanto:
+            Las automatizaciones operan con datos proporcionados por el usuario.
           </p>
 
           <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6">
-            <li>Neriom no garantiza resultados si los datos proporcionados son incorrectos, incompletos o inválidos.</li>
-            <li>Neriom no se hace responsable de daños, pérdidas o errores derivados del uso de automatizaciones.</li>
-            <li>La responsabilidad final del uso de los resultados recae exclusivamente en el usuario.</li>
-            <li>El usuario debe revisar y validar la información procesada antes de utilizarla en procesos reales.</li>
+            <li>Neriom no garantiza resultados con datos incorrectos.</li>
+            <li>El usuario es responsable de validar los resultados.</li>
+            <li>No se asume responsabilidad por daños derivados del uso.</li>
           </ul>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">4. Propiedad intelectual</h2>
           <p className="text-gray-700 mb-6">
-            Todo el contenido, software, interfaces y diseños del sitio son propiedad exclusiva de Neriom
-            y están protegidos por la legislación vigente.
+            Todo el contenido es propiedad exclusiva de Neriom.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">5. Contacto</h2>
           <p className="text-gray-700">
-            Si deseas más información sobre este Aviso Legal puedes escribirnos a:{" "}
+            Para dudas, escribe a{" "}
             <a href="mailto:contacto@neriom.mx" className="text-blue-600 underline">
               contacto@neriom.mx
-            </a>
+            </a>.
           </p>
 
           <div className="text-center mt-12">
@@ -143,7 +140,6 @@ export default function AvisoLegalPage() {
 
         </div>
       </div>
-
     </main>
   );
 }
