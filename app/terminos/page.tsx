@@ -2,18 +2,27 @@
 
 import { useEffect, useRef } from "react";
 
-/* ----------- PARTICLE BACKGROUND (same as homepage) ----------- */
+/* ------------------------------------------
+   PARTICLES — VERSIÓN 100% NULL-SAFE
+------------------------------------------- */
 function Particles() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const c = canvas.getContext("2d");
+    if (!canvas) return;
 
-    let w, h, particles;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let w = 0,
+      h = 0,
+      particles: any[] = [];
+
     const particleCount = 45;
 
-    function init() {
+    const init = () => {
+      if (!canvas) return;
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
 
@@ -27,10 +36,12 @@ function Particles() {
           dy: (Math.random() - 0.5) * 0.3,
         });
       }
-    }
+    };
 
-    function animate() {
-      c.clearRect(0, 0, w, h);
+    const animate = () => {
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, w, h);
 
       particles.forEach((p) => {
         p.x += p.dx;
@@ -39,14 +50,14 @@ function Particles() {
         if (p.x < 0 || p.x > w) p.dx *= -1;
         if (p.y < 0 || p.y > h) p.dy *= -1;
 
-        c.beginPath();
-        c.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        c.fillStyle = "rgba(255,255,255,0.25)";
-        c.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,255,255,0.25)";
+        ctx.fill();
       });
 
       requestAnimationFrame(animate);
-    }
+    };
 
     init();
     animate();
@@ -58,6 +69,9 @@ function Particles() {
   return <canvas ref={canvasRef} className="fixed inset-0 z-0"></canvas>;
 }
 
+/* ------------------------------------------
+   PÁGINA DE TÉRMINOS — CORREGIDA
+------------------------------------------- */
 export default function TerminosPage() {
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-[#0A1831] via-[#0F2247] to-[#142F66] text-white overflow-hidden">
@@ -66,16 +80,16 @@ export default function TerminosPage() {
       <Particles />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(59,130,246,0.22),transparent_70%)]" />
 
-      {/* BOTÓN FLOTANTE PARA REGRESAR */}
+      {/* BOTÓN FLOTANTE */}
       <button
         onClick={() => (window.location.href = "/")}
         className="
-          fixed top-6 left-6 z-50 
-          w-12 h-12 rounded-full 
+          fixed top-6 left-6 z-50
+          w-12 h-12 rounded-full
           bg-white/20 backdrop-blur-xl border border-white/30
-          shadow-xl text-white text-xl 
+          shadow-xl text-white text-xl
           flex items-center justify-center
-          hover:bg-white/30 hover:scale-110 
+          hover:bg-white/30 hover:scale-110
           transition-all cursor-pointer
         "
         title="Volver al inicio"
@@ -97,36 +111,36 @@ export default function TerminosPage() {
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">1. Uso de los servicios</h2>
           <p className="text-gray-700 mb-6">
-            Los servicios de Neriom están destinados a empresas y usuarios que
-            utilicen herramientas de automatización, chatbots, integraciones y procesamiento de datos.
+            Los servicios de Neriom están destinados a empresas y usuarios que utilicen
+            herramientas de automatización, chatbots, integraciones y procesamiento de datos.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">2. Responsabilidad del usuario</h2>
           <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6">
-            <li>Garantizar el derecho legal para procesar la información que subas.</li>
+            <li>Garantizar el derecho legal para procesar la información subida al sistema.</li>
             <li>No subir datos ilícitos o confidenciales sin autorización.</li>
-            <li>Ser responsable por el uso que tus colaboradores hagan de la plataforma.</li>
+            <li>Ser responsable por el uso que colaboradores hagan de la plataforma.</li>
           </ul>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">3. Limitación de responsabilidad</h2>
           <p className="text-gray-700 mb-6">Neriom no será responsable por:</p>
           <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6">
             <li>Daños indirectos o consecuenciales.</li>
-            <li>Pérdida de datos debido a factores externos.</li>
-            <li>Errores derivados de datos proporcionados por el usuario.</li>
-            <li>Interrupciones causadas por mantenimiento o terceros.</li>
+            <li>Pérdida de datos por factores externos.</li>
+            <li>Errores causados por datos ingresados por el usuario.</li>
+            <li>Interrupciones por mantenimiento o fallas de terceros.</li>
           </ul>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">4. Propiedad intelectual</h2>
           <p className="text-gray-700 mb-6">
-            Todo el software, código, marcas y sistemas desarrollados por Neriom
+            Todo software, código, marcas y sistemas desarrollados por Neriom
             son propiedad exclusiva de la empresa.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">5. Uso de archivos y datos</h2>
           <p className="text-gray-700 mb-6">
             Los archivos proporcionados (ej. XMLs) se procesan únicamente para la
-            ejecución solicitada y no se almacenan permanentemente sin autorización.
+            ejecución solicitada y no se almacenan permanentemente sin autorización previa.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">6. Suspensión o terminación</h2>
@@ -136,72 +150,45 @@ export default function TerminosPage() {
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">7. Cambios a los términos</h2>
           <p className="text-gray-700 mb-6">
-            Los términos pueden ser modificados. La versión vigente siempre estará disponible en esta página.
+            Los términos pueden cambiar. La versión vigente siempre estará publicada en esta página.
           </p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">8. Ley aplicable</h2>
+          <p className="text-gray-700 mb-6">Estos términos se rigen por las leyes de México.</p>
+
+
+          {/* NUEVA SECCIÓN QUE TÚ AGREGASTE */}
+          <h2 className="text-2xl font-semibold mt-10 mb-4">
+            9. Responsabilidad sobre automatizaciones y procesamiento de datos
+          </h2>
+
           <p className="text-gray-700 mb-6">
-            Estos términos se rigen por las leyes de México.
+            Las herramientas desarrolladas por <strong>Neriom</strong> procesan la información
+            proporcionada por el usuario. El usuario reconoce que:
           </p>
 
-<h2 className="text-2xl font-semibold mt-10 mb-4">
-  9. Responsabilidad sobre las automatizaciones y procesamiento de datos
-</h2>
+          <ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6">
+            <li>Debe verificar que los archivos y datos sean correctos y completos.</li>
+            <li>Los resultados dependen totalmente de lo que ingresa el usuario.</li>
+            <li>Neriom no es responsable por errores derivados de archivos incorrectos, datos incompletos, configuraciones erróneas o interpretaciones incorrectas.</li>
+            <li>Los resultados deben revisarse antes de usarse en procesos operativos o legales.</li>
+            <li>El usuario deslinda a Neriom de responsabilidad por decisiones tomadas basadas en automatizaciones.</li>
+          </ul>
 
-<p className="text-gray-700 mb-6">
-  Las herramientas, automatizaciones y flujos desarrollados por <strong>Neriom</strong> procesan información y archivos proporcionados directamente por el usuario. 
-  Debido a la naturaleza automatizada del sistema, el usuario reconoce y acepta que:
-</p>
+          <p className="text-gray-700 mb-6">
+            El usuario acepta que los flujos automáticos son herramientas de apoyo
+            y que el uso final de los resultados es su propia responsabilidad.
+          </p>
 
-<ul className="list-disc ml-6 text-gray-700 space-y-2 mb-6">
-  <li>
-    Es su responsabilidad verificar que los datos, archivos y configuraciones 
-    proporcionados al sistema sean correctos, completos y verídicos.
-  </li>
 
-  <li>
-    Cualquier resultado, archivo renombrado, agrupación, combinación o proceso 
-    ejecutado por el sistema dependerá exclusivamente de la información ingresada 
-    por el usuario.
-  </li>
-
-  <li>
-    <strong>Neriom</strong> no será responsable por errores, pérdidas, daños o 
-    inconsistencias derivados de:
-    - archivos cargados incorrectamente,
-    - datos incompletos,
-    - configuraciones erróneas,
-    - uso indebido de las herramientas,
-    - o interpretación incorrecta de los resultados generados.
-  </li>
-
-  <li>
-    El usuario acepta que las automatizaciones son herramientas de apoyo y que 
-    cualquier decisión operativa o administrativa tomada a partir de los resultados 
-    es responsabilidad exclusiva del usuario.
-  </li>
-
-  <li>
-    El usuario debe revisar y validar los resultados obtenidos antes de utilizarlos 
-    en procesos internos, administrativos, fiscales o legales.
-  </li>
-</ul>
-
-<p className="text-gray-700 mb-6">
-  Al utilizar los servicios, el usuario deslinda a <strong>Neriom</strong> de 
-  toda responsabilidad derivada del uso de automatizaciones, flujos automáticos 
-  o procesamiento de archivos ejecutado bajo su propia discreción.
-</p>
-
-<h2 className="text-2xl font-semibold mt-10 mb-4">10. Contacto</h2>
+          <h2 className="text-2xl font-semibold mt-10 mb-4">10. Contacto</h2>
           <p className="text-gray-700">
-            Puedes contactarnos en:{" "}
+            Puedes escribirnos a:{" "}
             <a href="mailto:contacto@neriom.mx" className="text-blue-600">
               contacto@neriom.mx
             </a>
           </p>
-          
-          {/* BOTÓN INFERIOR */}
+
           <div className="text-center mt-12">
             <a
               href="/"
