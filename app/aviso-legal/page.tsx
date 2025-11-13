@@ -3,16 +3,19 @@
 import { useEffect, useRef } from "react";
 
 /* ------------------------------------------
-   PARTICULAS – mismo componente que usas
+   PARTICULAS – corregidas para evitar errores
 ------------------------------------------- */
 function Particles() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const c = canvas.getContext("2d");
+    if (!canvas) return; // 👈 evita error en build
 
-    let w, h, particles;
+    const c = canvas.getContext("2d");
+    if (!c) return; // 👈 evita error adicional
+
+    let w: number, h: number, particles: any[];
     const particleCount = 45;
 
     function init() {
@@ -98,7 +101,7 @@ export default function AvisoLegalPage() {
 
           <h2 className="text-2xl font-semibold mt-10 mb-4">2. Uso permitido</h2>
           <p className="text-gray-700 mb-6">
-            El usuario se compromete a utilizar el sitio web y los servicios únicos para fines legítimos,
+            El usuario se compromete a utilizar el sitio web y los servicios únicamente para fines legítimos,
             sin violar derechos de terceros ni realizar usos indebidos de las herramientas.
           </p>
 
