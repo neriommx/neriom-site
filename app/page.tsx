@@ -203,12 +203,13 @@ export default function Home() {
             </a>
 
             <a
-              href="https://neriom-xml.vercel.app"
-              target="_blank"
-              className="px-8 py-3 rounded-xl border border-blue-400 text-blue-200 hover:bg-blue-400/20 hover:text-white transition-all"
-            >
-              Ir a Neriom XML
-            </a>
+  href="https://xml.neriom.mx"
+  target="_blank"
+  className="px-8 py-3 rounded-xl border border-blue-400 text-blue-200 hover:bg-blue-400/20 hover:text-white transition-all"
+>
+  Ir a Neriom XML
+</a>
+
           </div>
         </motion.div>
       </section>
@@ -266,9 +267,14 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold mb-5">Neriom XML</h3>
                 <p className="text-gray-600 text-base mb-8">Automatización total del flujo XML.</p>
 
-                <a href="https://neriom-xml.vercel.app" target="_blank" className="text-blue-600 font-medium hover:text-blue-800">
-                  Abrir producto →
-                </a>
+                <a 
+  href="https://xml.neriom.mx" 
+  target="_blank" 
+  className="text-blue-600 font-medium hover:text-blue-800"
+>
+  Abrir producto →
+</a>
+
               </motion.div>
             </TiltCard>
 
